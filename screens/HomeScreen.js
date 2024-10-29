@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { 
+  FlatList, 
   Text, 
   View, 
   StyleSheet, 
   TouchableOpacity, 
+  Image, 
   ImageBackground 
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { songs, albums } from "../data"; 
+import MusicList from "../components/MusicList";
+import AlbumList from "../components/AlbumList";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
     retrieveData();
@@ -21,9 +28,11 @@ const HomeScreen = ({ navigation }) => {
     try {
       const storedEmail = await AsyncStorage.getItem("email");
       const storedUsername = await AsyncStorage.getItem("username");
+      const storedUserImage = await AsyncStorage.getItem("userImage");
 
       if (storedEmail) setEmail(storedEmail);
       if (storedUsername) setUsername(storedUsername);
+      if (storedUserImage) setUserImage(storedUserImage);
 
       if (!storedEmail || !storedUsername) {
         navigation.navigate("SignIn");
@@ -33,25 +42,94 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const signOut = async () => {
-    try {
-      await AsyncStorage.clear();
-      navigation.navigate("SignIn");
-    } catch (error) {
-      console.log("Error clearing data:", error);
-    }
+  const navigateToProfile = () => {
+    navigation.navigate("ProfileScreen");
+  };
+
+  const getSongsByIds = (ids) => {
+    return songs.filter((song) => ids.includes(song.id));
+  };
+
+  const groupSongsByGenre = () => {
+    const grouped = songs.reduce((acc, song) => {
+      if (!acc[song.genre]) {
+        acc[song.genre] = [];
+      }
+      acc[song.genre].push(song);
+      return acc;
+    }, {});
+    return Object.entries(grouped);
+  };
+
+  const genres = groupSongsByGenre();
+
+  const goToMusicList = () => {
+    navigation.navigate("MusicList");  
   };
 
   return (
     <ImageBackground source={require('../songs/images/Home.jpg')} style={styles.backgroundImage}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.greeting}>Hello, {username}!</Text>
-          <Text style={styles.subHeader}>{email}</Text>
+          <View style={styles.greetingContainer}>
+            <Text style={styles.greeting}>Hello, {username}!</Text>
+            <Text style={styles.subHeader}>{email}</Text>
+          </View>
+          {userImage && (
+            <TouchableOpacity onPress={navigateToProfile}>
+              <Image source={{ uri: userImage }} style={styles.profileImage} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={goToMusicList} style={styles.musicListButton}>
+              <Ionicons name="musical-notes" size={30} color="white" />
+            </TouchableOpacity>
+            
         </View>
-        <TouchableOpacity onPress={signOut} style={styles.signOutButton}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
+        
+        {/* Albums List */}
+        <FlatList
+  data={albums}
+  keyExtractor={(item) => item.id.toString()}
+  horizontal
+  renderItem={({ item }) => (
+    <View style={styles.albumContainer}>
+      <AlbumList
+        album={item}
+        onPress={() =>
+          navigation.navigate("AlbumDetail", {
+            album: item,
+            songs: getSongsByIds(item.songs),
+          })
+        }
+      />
+
+      {item.title && <Text style={styles.albumName}>{item.title}</Text>}
+    </View>
+  )}
+  contentContainerStyle={styles.albumListContainer}
+  showsHorizontalScrollIndicator={false}
+/>
+
+
+        {/* Genre List */}
+        <FlatList
+          data={genres}
+          keyExtractor={(item) => item[0]}
+          renderItem={({ item }) => (
+            <View style={styles.genreContainer}>
+              <Text style={styles.genreTitle}>{item[0]}</Text>
+              <FlatList
+                horizontal
+                data={item[1]}
+                renderItem={({ item }) => <MusicList item={item} />}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={styles.listContainer}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
+        />
       </SafeAreaView>
     </ImageBackground>
   );
@@ -70,6 +148,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#1a1a2e",
     borderBottomWidth: 1,
     borderBottomColor: "#2e2e4d",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  greetingContainer: {
+    flex: 1,
   },
   greeting: {
     fontSize: 24,
@@ -81,17 +165,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#b5b5c3",
   },
-  signOutButton: {
-    marginTop: 20,
-    backgroundColor: "#E63946",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#00FFF6",
   },
-  signOutText: {
+  albumListContainer: {
+    paddingVertical: 10,
+    paddingLeft: 10,
+  },
+  albumContainer: {
+    alignItems: "center",
+    marginRight: 15, 
+  },
+  albumName: {
+    fontSize: 14,
     color: "#ffffff",
-    fontSize: 16,
+    marginTop: 5, 
+  },
+  genreContainer: {
+    marginVertical: 10,
+  },
+  genreTitle: {
+    fontSize: 20,
     fontWeight: "bold",
+    color: "#ffffff",
+    marginLeft: 10,
+  },
+  listContainer: {
+    paddingHorizontal: 10,
+  },
+  separator: {
+    width: 10,
   },
 });
 
