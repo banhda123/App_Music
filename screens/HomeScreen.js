@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { songs, albums } from "../data"; 
 import MusicList from "../components/MusicList";
+import AlbumList from "../components/AlbumList";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
@@ -85,9 +86,29 @@ const HomeScreen = ({ navigation }) => {
             
         </View>
         
-        
+        {/* Albums List */}
+        <FlatList
+  data={albums}
+  keyExtractor={(item) => item.id.toString()}
+  horizontal
+  renderItem={({ item }) => (
+    <View style={styles.albumContainer}>
+      <AlbumList
+        album={item}
+        onPress={() =>
+          navigation.navigate("AlbumDetail", {
+            album: item,
+            songs: getSongsByIds(item.songs),
+          })
+        }
+      />
 
-     
+      {item.title && <Text style={styles.albumName}>{item.title}</Text>}
+    </View>
+  )}
+  contentContainerStyle={styles.albumListContainer}
+  showsHorizontalScrollIndicator={false}
+/>
 
 
         {/* Genre List */}
