@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
-import { fetchGeminiResponse } from "../Gemini";
+import { fetchGeminiResponse } from "../components/Gemini";
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
