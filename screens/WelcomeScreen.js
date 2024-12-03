@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* Thêm hình ảnh vào màn hình chào mừng */}
+      
       <Image source={require('../songs/images/Welcome.jpg')} style={styles.logo} />
       
       <Text style={styles.title}>Welcome to Music App</Text>

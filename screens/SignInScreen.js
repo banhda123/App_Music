@@ -2,7 +2,7 @@ import { Image, ScrollView, Text, TextInput, TouchableOpacity, View, StyleSheet,
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToastManager, { Toast } from 'toastify-react-native';
-import { usersData } from '../data1'; // Import the user data
+import { usersData } from '../data1'; 
 
 const SignInUser = ({ navigation }) => {
   const [email, setEmail] = useState("");

@@ -70,27 +70,27 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 20,
     paddingVertical: 10,
-    backgroundColor: '#2A2D44', // Nền header
+    backgroundColor: '#2A2D44', 
     borderRadius: 10,
     alignItems: 'center',
   },
   greeting: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFF', // Màu chữ trắng
+    color: '#FFF', 
   },
   listContainer: {
     paddingBottom: 20,
   },
   separator: {
     height: 1,
-    backgroundColor: '#3A3D5C', // Dải phân cách nhẹ
+    backgroundColor: '#3A3D5C', 
     marginVertical: 10,
   },
   songItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2A2D44', // Nền từng bài nhạc
+    backgroundColor: '#2A2D44', 
     padding: 10,
     borderRadius: 10,
   },

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign, Ionicons } from "@expo/vector-icons"; // Import Ionicons cho nút mũi tên
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Slider from '@react-native-community/slider';
 import { Audio } from "expo-av";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { songs } from "../data"; // danh sách bài hát
+import { songs } from "../data"; 
 
 const MusicScreen = () => {
   const route = useRoute();
@@ -17,7 +17,7 @@ const MusicScreen = () => {
   const [position, setPosition] = useState(0);
   const [sliderPosition, setSliderPosition] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1.0); // Thêm state cho âm lượng
+  const [volume, setVolume] = useState(1.0); 
   const [isMiniPlayerVisible, setIsMiniPlayerVisible] = useState(false);
 
   const ref = useRef();
@@ -25,12 +25,11 @@ const MusicScreen = () => {
   useEffect(() => {
     const loadAndPlaySong = async () => {
       if (sound) {
-        await sound.unloadAsync();  // Ensure previous sound is unloaded
+        await sound.unloadAsync(); 
         setSound(null);
-        await new Promise(resolve => setTimeout(resolve, 100)); // Short delay to avoid issues
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
 
-      // Load the new sound
       const { sound: newSound, status } = await Audio.Sound.createAsync(
         songs[currentSong].url,
         { shouldPlay: true, volume }
@@ -38,7 +37,7 @@ const MusicScreen = () => {
 
       
 
-      setSound(newSound);  // Set the new sound
+      setSound(newSound); 
       setDuration(status.durationMillis);
       setIsPlaying(true);
 
@@ -57,7 +56,7 @@ const MusicScreen = () => {
 
     return () => {
       if (sound) {
-        sound.unloadAsync();  // Cleanup when the component unmounts or when changing songs
+        sound.unloadAsync();  
       }
     };
   }, [currentSong]);
@@ -177,7 +176,6 @@ const MusicScreen = () => {
             onValueChange={handleSliderValueChange}
           />
 
-          {/* Thêm khung thời gian */}
           <View style={styles.timeWrapper}>
             <Text style={styles.timeText}>{formatTime(position)}</Text>
             <Text style={styles.timeText}>{formatTime(duration)}</Text>

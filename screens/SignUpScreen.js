@@ -1,7 +1,7 @@
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import ToastManager, { Toast } from 'toastify-react-native';
-import { usersData } from '../data1'; // Import your mock data
+import { usersData } from '../data1'; 
 
 const SignUpUser = ({ navigation }) => {
   const [email, setEmail] = useState("");
