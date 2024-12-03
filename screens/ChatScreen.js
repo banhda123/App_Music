@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator,} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { fetchGeminiResponse } from "../Gemini";
 
 const ChatScreen = () => {
@@ -7,59 +7,47 @@ const ChatScreen = () => {
   const [userMessage, setUserMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const addMessage = (sender, text) => {
+    setMessages((prevMessages) => [...prevMessages, { sender, text }]);
+  };
+
   const handleSendMessage = async () => {
-    if (userMessage.trim()) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "user", text: userMessage },
-      ]);
-      setUserMessage("");
+    if (!userMessage.trim()) return;
 
-      setLoading(true);
+    addMessage("user", userMessage);
+    setUserMessage("");
+    setLoading(true);
 
-      try {
-        const aiResponse = await fetchGeminiResponse(userMessage);
-
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: aiResponse || "Không có phản hồi." },
-        ]);
-      } catch (error) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: "Có lỗi xảy ra, vui lòng thử lại." },
-        ]);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      const aiResponse = await fetchGeminiResponse(userMessage);
+      addMessage("ai", aiResponse || "Không có phản hồi.");
+    } catch (error) {
+      addMessage("ai", "Có lỗi xảy ra, vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const renderMessages = () => {
+    return messages.map((msg, index) => (
+      <View
+        key={index}
+        style={[styles.message, msg.sender === "user" ? styles.userMessage : styles.aiMessage]}
+      >
+        <Text style={styles.messageText}>
+          {msg.sender === "user" ? "Bạn: " : "gemini: "} {msg.text}
+        </Text>
+      </View>
+    ));
   };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.messagesContainer} contentContainerStyle={styles.messagesContent}>
-        {messages.map((msg, index) => (
-          <View
-            key={index}
-            style={[
-              styles.message,
-              msg.sender === "user" ? styles.userMessage : styles.aiMessage,
-            ]}
-          >
-            <Text style={styles.messageText}>
-              {msg.sender === "user" ? "Bạn: " : "gemini: "} {msg.text}
-            </Text>
-          </View>
-        ))}
+        {renderMessages()}
       </ScrollView>
 
-      {loading && (
-        <ActivityIndicator
-          size="large"
-          color="#007bff"
-          style={styles.loading}
-        />
-      )}
+      {loading && <ActivityIndicator size="large" color="#007bff" style={styles.loading} />}
 
       <View style={styles.inputContainer}>
         <TextInput
