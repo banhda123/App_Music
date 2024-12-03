@@ -1,14 +1,14 @@
-import { Text, View, TouchableOpacity, Image, StyleSheet,} from "react-native";
+import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { usersData } from "../data1"; 
+import { usersData } from "../data1";
 
 const ProfileScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [userImage, setUserImage] = useState(null); 
+  const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
     retrieveData();
@@ -23,7 +23,6 @@ const ProfileScreen = ({ navigation }) => {
         setEmail(storedEmail);
         setUsername(storedUsername);
 
-        
         const user = usersData.find((u) => u.email === storedEmail);
         if (user) {
           setUserImage(user.userimage);
@@ -46,33 +45,30 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-     
-      <Image
-        source={userImage || require("../songs/images/default.jpg")}
-        style={styles.backgroundImage}
-      />
-      <View style={styles.content}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.profileImage}
-            source={userImage || require("../songs/images/default.jpg")}
-          />
-        </View>
-        <Text style={styles.profileText}>Profile</Text>
-
-        <View style={styles.iconContainer}>
-          <MaterialCommunityIcons
-            name="face-man-profile"
-            size={80}
-            color="#00FFF6"
-          />
-        </View>
-
+      <View style={styles.header}>
         <Text style={styles.username}>{username}</Text>
-        <Text style={styles.email}>{email}</Text>
+        <TouchableOpacity onPress={handleLogout}>
+          <MaterialCommunityIcons name="logout" size={28} color="#FFF" />
+        </TouchableOpacity>
+      </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
+      <View style={styles.profileSection}>
+        <Image
+          style={styles.profileImage}
+          source={userImage || require("../songs/images/default.jpg")}
+        />
+        <Text style={styles.email}>{email}</Text>
+      </View>
+
+      <View style={styles.menuSection}>
+        <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText}>Account Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText}>Your Plan</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText}>Support</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -82,67 +78,47 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative", 
+    backgroundColor: "#121212", // Dark background similar to Spotify
+    paddingHorizontal: 20,
   },
-  backgroundImage: {
-    ...StyleSheet.absoluteFillObject, 
-    opacity: 0.3,
-    zIndex: -1,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "transparent",
+    marginTop: 20,
   },
-  imageContainer: {
-    marginTop: 30,
+  username: {
+    color: "#FFF",
+    fontSize: 22,
+    fontWeight: "700",
+  },
+  profileSection: {
+    alignItems: "center",
+    marginTop: 40,
   },
   profileImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    borderWidth: 3,
-    borderColor: "#00FFF6",
-    alignSelf: "center",
-  },
-  profileText: {
-    color: "black", 
-    fontSize: 24,
-    fontWeight: "700",
-    marginTop: 20,
-  },
-  iconContainer: {
-    marginTop: 15,
-  },
-  username: {
-    color: "black", 
-    fontSize: 20,
-    fontWeight: "600",
-    marginTop: 15,
+    borderWidth: 4,
+    borderColor: "#1DB954", // Spotify green
   },
   email: {
-    color: "#555", 
+    color: "#AAA",
     fontSize: 16,
-    marginTop: 5,
+    marginTop: 10,
   },
-  logoutButton: {
-    marginTop: 50,
-    width: "80%",
-    borderRadius: 5,
+  menuSection: {
+    marginTop: 30,
+  },
+  menuItem: {
     paddingVertical: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FF4081", 
+    borderBottomWidth: 1,
+    borderBottomColor: "#333",
   },
-  logoutText: {
-    color: "black",
+  menuText: {
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: "600",
-    textTransform: "uppercase", 
-    letterSpacing: 1.5,
-    textAlign: "center",
   },
 });
 

@@ -47,7 +47,7 @@ const ChatScreen = () => {
             ]}
           >
             <Text style={styles.messageText}>
-              {msg.sender === "user" ? "Bạn: " : "Tini: "} {msg.text}
+              {msg.sender === "user" ? "Bạn: " : "gemini: "} {msg.text}
             </Text>
           </View>
         ))}
@@ -79,7 +79,7 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9fb",
+    backgroundColor: "#1c1c1e",
     padding: 16,
   },
   messagesContainer: {
@@ -89,43 +89,46 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   message: {
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 15,
-    maxWidth: "75%",
+    padding: 14,
+    marginBottom: 12,
+    borderRadius: 20,
+    maxWidth: "80%",
   },
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "#007bff",
+    backgroundColor: "#0a84ff",
+    borderTopRightRadius: 0,
   },
   aiMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#e6e6e6",
+    backgroundColor: "#2c2c2e",
+    borderTopLeftRadius: 0,
   },
   messageText: {
     fontSize: 16,
-    color: "#000",
+    color: "#f2f2f7",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
+    backgroundColor: "#2c2c2e",
+    borderRadius: 30,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   input: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
     padding: 12,
-    borderRadius: 25,
-    marginRight: 8,
     fontSize: 16,
+    color: "#f2f2f7",
   },
   sendButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
+    backgroundColor: "#30d158",
+    paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 25,
+    borderRadius: 20,
+    marginLeft: 8,
   },
   sendButtonText: {
     color: "#fff",
@@ -134,6 +137,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginVertical: 10,
+    alignSelf: "center",
   },
 });
 
